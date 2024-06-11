@@ -1,7 +1,11 @@
-export function Root(){
+import { Outlet } from 'react-router-dom'
+export function Root() {
   return (
     <div>
-      <h1>Root Route!</h1>
+      <nav></nav>
+      <main>
+        <Outlet />
+      </main>
     </div>
   )
 }

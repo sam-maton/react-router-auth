@@ -8,9 +8,16 @@ import {
 } from 'react-router-dom'
 import './index.css'
 import { Root } from './routes/root'
+import { About } from './routes/about'
+import { Index } from './routes'
 
 const router = createBrowserRouter(
-  createRoutesFromElements(<Route path="/" element={<Root />}></Route>)
+  createRoutesFromElements(
+    <Route path="/" element={<Root />}>
+      <Route index element={<Index />} />
+      <Route path="about" element={<About />} />
+    </Route>
+  )
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

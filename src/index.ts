@@ -5,7 +5,7 @@ import { logger } from 'hono/logger'
 
 const app = new Hono()
 app.use(logger())
-app.basePath('/api').route('/admin', admin)
+app.basePath('/api').route('/admin', admin).route('/auth', auth)
 
 export default {
   port: 4321,

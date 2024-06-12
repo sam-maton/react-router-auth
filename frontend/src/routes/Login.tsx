@@ -1,4 +1,9 @@
-import { Form, useActionData, type ActionFunctionArgs } from 'react-router-dom'
+import {
+  Form,
+  redirect,
+  useActionData,
+  type ActionFunctionArgs,
+} from 'react-router-dom'
 
 type Errors = {
   username?: string
@@ -9,15 +14,26 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const username = data.get('username')
   const password = data.get('password')
-  const erorrs: Errors = {}
+  const errors: Errors = {}
   if (!username) {
-    erorrs.username = 'Username is required'
+    errors.username = 'Username is required'
   }
   if (!password) {
-    erorrs.password = 'Password is required'
+    errors.password = 'Password is required'
   }
 
-  return erorrs
+  if (Object.keys(errors).length) {
+    return errors
+  }
+
+  const response = await fetch('/api/auth/login', {
+    method: 'POST',
+    body: data,
+  })
+
+  const body = await response.json()
+
+  return redirect('/')
 }
 
 export function Login() {

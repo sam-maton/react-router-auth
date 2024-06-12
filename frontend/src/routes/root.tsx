@@ -15,6 +15,11 @@ export function Root() {
                 About
               </a>
             </li>
+            <li>
+              <a href="/admin" className="hover:text-blue-500">
+                Admin
+              </a>
+            </li>
           </ul>
         </nav>
         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">

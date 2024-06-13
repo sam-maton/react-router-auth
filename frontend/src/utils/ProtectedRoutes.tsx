@@ -1,13 +1,15 @@
 import { Outlet, Navigate } from 'react-router-dom'
+import { create } from 'zustand'
 
-function checkCookie() {
-  const cookies = document.cookie
-  return cookies.includes('session')
-}
+export const useStore = create((set) => ({
+  user: null,
+  setUser: (user) => set(() => ({ user: user })),
+  logout: () => set({ user: null }),
+}))
 
 export function ProtectedRoutes() {
-  const user = checkCookie()
-
+  const { user } = useStore.getState()
+  console.log(user)
   if (!user) {
     return <Navigate to="/login" />
   }

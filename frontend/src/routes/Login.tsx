@@ -1,9 +1,5 @@
-import {
-  Form,
-  redirect,
-  useActionData,
-  type ActionFunctionArgs,
-} from 'react-router-dom'
+import { Form, useActionData, type ActionFunctionArgs } from 'react-router-dom'
+import { useStore } from '../utils/ProtectedRoutes'
 
 type Errors = {
   username?: string
@@ -33,7 +29,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const body = await response.json()
 
-  return redirect('/')
+  if (response.ok) {
+    useStore.getState().setUser(body)
+    return null
+  }
+
+  return null
 }
 
 export function Login() {

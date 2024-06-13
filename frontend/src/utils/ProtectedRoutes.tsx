@@ -1,10 +1,17 @@
 import { Outlet, Navigate } from 'react-router-dom'
 import { create } from 'zustand'
 
-export const useStore = create((set) => ({
+type State = {
+  user: object | null
+}
+
+type Action = {
+  setUser: (user: State['user']) => void
+}
+
+export const useStore = create<State & Action>((set) => ({
   user: null,
   setUser: (user) => set(() => ({ user: user })),
-  logout: () => set({ user: null }),
 }))
 
 export function ProtectedRoutes() {

@@ -29,16 +29,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const body = await response.json()
 
-  if (response.ok) {
-    useStore.getState().setUser(body)
-    return null
-  }
-
   return null
 }
 
 export function Login() {
   const errors: Errors = useActionData()
+
+  const setUser = useStore((state) => state.setUser)
+
+  setUser({ id: 1, name: 'Steven Smith', userName: 'steve_smith' })
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-3xl font-bold mb-4">Login</h1>

@@ -1,43 +1,50 @@
-import { Form, useActionData, type ActionFunctionArgs } from 'react-router-dom'
-import { useStore } from '../utils/ProtectedRoutes'
+import {
+  Form,
+  redirect,
+  useActionData,
+  type ActionFunctionArgs,
+} from 'react-router-dom'
+import { type AppContextType } from '../utils/appContext'
 
 type Errors = {
   username?: string
   password?: string
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-  const data = await request.formData()
-  const username = data.get('username')
-  const password = data.get('password')
-  const errors: Errors = {}
-  if (!username) {
-    errors.username = 'Username is required'
+export const action =
+  (appContext: AppContextType) =>
+  async ({ request }: ActionFunctionArgs) => {
+    const data = await request.formData()
+    const username = data.get('username')
+    const password = data.get('password')
+    const errors: Errors = {}
+    if (!username) {
+      errors.username = 'Username is required'
+    }
+    if (!password) {
+      errors.password = 'Password is required'
+    }
+
+    if (Object.keys(errors).length) {
+      return errors
+    }
+
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      body: data,
+    })
+
+    const body = await response.json()
+
+    const { setCurrentUser } = appContext
+    setCurrentUser(body)
+
+    return redirect('/')
   }
-  if (!password) {
-    errors.password = 'Password is required'
-  }
-
-  if (Object.keys(errors).length) {
-    return errors
-  }
-
-  const response = await fetch('/api/auth/login', {
-    method: 'POST',
-    body: data,
-  })
-
-  const body = await response.json()
-
-  return null
-}
 
 export function Login() {
-  const errors: Errors = useActionData()
+  const errors = useActionData() as Errors
 
-  const setUser = useStore((state) => state.setUser)
-
-  setUser({ id: 1, name: 'Steven Smith', userName: 'steve_smith' })
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-3xl font-bold mb-4">Login</h1>
@@ -85,12 +92,7 @@ export function Login() {
         </div>
       </Form>
       <div className="flex items-center justify-between">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          onClick={() =>
-            setUser({ name: 'Steven Smith', userName: 'steve_smith' })
-          }
-        >
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Fake Login
         </button>
       </div>
